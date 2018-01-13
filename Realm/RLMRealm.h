@@ -564,6 +564,7 @@ NS_REFINED_FOR_SWIFT;
  */
 - (void)deleteAllObjects;
 
+- (void)deleteTableName:(NSString *)className;
 
 #pragma mark - Migrations
 

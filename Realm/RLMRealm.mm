@@ -778,6 +778,21 @@ REALM_NOINLINE static void translateSharedGroupOpenException(RLMRealmConfigurati
     RLMDeleteAllObjectsFromRealm(self);
 }
 
+- (void)deleteTableName:(NSString *)className {
+    TableRef table = ObjectStore::table_for_object_type(self.group, className.UTF8String);
+    if (!table) {
+        return;
+    }
+    if ([self.schema schemaForClassName:className]) {
+        table->clear();
+    }
+    realm::ObjectStore::delete_data_for_object(self.group, className.UTF8String);
+    //FIXME:尚未清楚SharedRealm 和 普通realm，有什么区别，如果遇异常尝试用SharedRealm
+    //    RLMSchema *schema = RLMSchema.sharedSchema;
+    //    RLMRealm *newRealm = [RLMRealm realmWithSharedRealm:_realm schema:schema.copy];
+    //    realm::ObjectStore::delete_data_for_object(newRealm.group, className.UTF8String);
+}
+
 - (RLMResults *)allObjects:(NSString *)objectClassName {
     return RLMGetObjects(self, objectClassName, nil);
 }
